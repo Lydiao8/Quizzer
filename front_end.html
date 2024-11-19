@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Form with Bootstrap</title>
+  <!-- Include Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    /* Background gradient */
+    body {
+      background: linear-gradient(135deg, #6e7dff, #a0c4ff);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+    }
+
+    .form-container {
+      background-color: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Form container -->
+  <div class="form-container">
+    <h2 class="text-center mb-4">Welcome!</h2>
+    <form>
+      <div class="mb-3">
+        <label for="name" class="form-label">Enter your name</label>
+        <input type="text" class="form-control" id="name" placeholder="Your name" required>
+      </div>
+      <button type="submit" class="btn btn-primary w-100">Start test</button>
+    </form>
+  </div>
+
+  <!-- Include Bootstrap JS and dependencies -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
