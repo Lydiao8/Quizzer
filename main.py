@@ -1,7 +1,9 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
+from quizzer_db import QuizzerDB
 
 app = FastAPI()
+db = QuizzerDB()
 
 class RegisterCandidateRequest(BaseModel): 
     firstName: str
@@ -20,17 +22,16 @@ class Quizzer:
         self.score = 0 
 
     def load_questions(self):
-        dbItems = QuizzerDB.get_questions()
+        dbItems = db.get_questions()
 
         for question_no, question, options, answer in dbItems:
             self.questionsDict[question_no] = [question, options.split(','), answer]
         
-        #how is it returning the options? 
     
     def get_next_question(self):
         self.current += 1
         if self.current > len(self.questionsDict):
-            return {"message": f"Your score is {self.score} out of {len(self.questionsDict)}"} #function to get final score 
+            return {"message": f"Your score is {self.score} out of {len(self.questionsDict)}"} 
         question, options, answer = self.questionsDict[self.current]
         return {"question": question, "options": options}
     
@@ -39,7 +40,7 @@ class Quizzer:
         if user_answer.lower() == correct_answer.lower():  
             self.score += 1
     
-    def end_quizzer(self): #should it be an end point too?
+    def end_quizzer(self): 
         self.score = 0 
         self.current = 0 
         self.questionsDict = {}
@@ -49,12 +50,13 @@ quizzer_instances = {}
 
 @app.post("/candidates/create")
 def create_candidate(candidate: RegisterCandidateRequest): # Insert candidate details into the database
-    return QuizzerDB.create_candidate(candidate)
+    return db.create_candidate(candidate)
 
     
 @app.get("/start-test")
 def start_quiz(email: str):
-    quizzer = quizzer_instances[email]
+    quizzer_instances[email] = Quizzer() #to check logic here3
+    quizzer_instances[email].load_questions()
     return quizzer.get_next_question()
 
 @app.get("/next-question")
@@ -69,7 +71,7 @@ def get_answer(email: str, user_answer: str):
 
 @app.post("/add-question")
 def add_question(new_question: NewQuestion):
-    return QuizzerDB.add_question(new_question)
+    return db.add_question(new_question)
 
 @app.delete("/end-quiz")
 def end_quizzer(email: str):
@@ -81,8 +83,5 @@ def end_quizzer(email: str):
     return {"message": "No quiz has been started"}
 
 
-# can candidate submit without answering all questions? 
-# end point to submit?     
-# end point to update/delete from question database
 
 
